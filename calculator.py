@@ -50,10 +50,6 @@ def calculate_monthly_payment(loan_amount, loan_duration_months, annual_interest
     }
 
 
-# TODO (v2.0): Implement calculate_loan_term()
-# See BUSINESS_REQUIREMENT.md for formula and acceptance criteria
-
-
 # ── CLI ──────────────────────────────────────────────────────────────────────
 
 
