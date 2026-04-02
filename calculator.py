@@ -4,8 +4,6 @@ Loan Calculator v1.0 – Banking Hackathon Edition
 Currently supports:
   - Monthly payment calculation
 
-TODO (v2.0): Add loan term calculation
-  See BUSINESS_REQUIREMENT.md
 """
 
 import math
