@@ -41,9 +41,3 @@ def test_negative_rate_raises():
     with pytest.raises(ValueError):
         calculate_monthly_payment(10000, 60, -5.0)
 
-
-# ── TODO (v2.0): Add tests for calculate_loan_term ──────────────────────────
-# Expected test cases from BUSINESS_REQUIREMENT.md:
-#   - €25,000 / €500/month / 5%  → 56 months
-#   - €10,000 / €2,000/month / 3% → 6 months
-#   - €25,000 / €50/month / 5%   → Error (payment too low)
