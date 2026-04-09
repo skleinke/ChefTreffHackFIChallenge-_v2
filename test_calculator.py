@@ -7,37 +7,35 @@ from calculator import calculate_monthly_payment
 # ── Correct calculations ─────────────────────────────────────────────────────
 
 def test_standard_loan():
-    result = calculate_monthly_payment(25000, 60, 5.0)
-    assert result["monthly_payment"] == 471.78
+    # 10k principal, 5% rate, 10 years
+    result = calculate_monthly_payment(10000, 5.0, 10)
+    assert result == 106.07
+
+def test_zero_interest_loan():
+    # 12k principal, 0% rate, 1 year
+    result = calculate_monthly_payment(12000, 0, 1)
+    assert result == 1000.00
 
 def test_small_loan():
-    result = calculate_monthly_payment(1000, 12, 3.0)
-    assert result["monthly_payment"] == 84.69
-
-def test_large_loan():
-    result = calculate_monthly_payment(500000, 360, 4.0)
-    assert result["monthly_payment"] == 2387.08
-
-def test_total_interest_is_positive():
-    result = calculate_monthly_payment(10000, 24, 5.0)
-    assert result["total_interest"] > 0
-
-def test_total_payment_exceeds_loan():
-    result = calculate_monthly_payment(10000, 24, 5.0)
-    assert result["total_payment"] > 10000
+    # 1k principal, 3% rate, 1 year
+    result = calculate_monthly_payment(1000, 3.0, 1)
+    assert result == 84.69
 
 
 # ── Input validation ─────────────────────────────────────────────────────────
 
 def test_negative_amount_raises():
     with pytest.raises(ValueError):
-        calculate_monthly_payment(-10000, 60, 5.0)
+        calculate_monthly_payment(-10000, 5.0, 10)
 
-def test_zero_duration_raises():
+def test_zero_years_raises():
     with pytest.raises(ValueError):
-        calculate_monthly_payment(10000, 0, 5.0)
+        calculate_monthly_payment(10000, 5.0, 0)
+
+def test_negative_years_raises():
+    with pytest.raises(ValueError):
+        calculate_monthly_payment(10000, 5.0, -5)
 
 def test_negative_rate_raises():
     with pytest.raises(ValueError):
-        calculate_monthly_payment(10000, 60, -5.0)
-
+        calculate_monthly_payment(10000, -5.0, 10)

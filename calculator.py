@@ -12,40 +12,34 @@ import math
 # ── Core Calculation ─────────────────────────────────────────────────────────
 
 
-def calculate_monthly_payment(loan_amount, loan_duration_months, annual_interest_rate):
+def calculate_monthly_payment(principal, annual_interest_rate, years):
     """Calculate the monthly payment for a loan.
 
-    Formula: M = P * [r(1+r)^n] / [(1+r)^n - 1]
+    Formula: M = P [ i(1 + i)^n ] / [ (1 + i)^n – 1 ]
 
     Args:
-        loan_amount:          Total loan amount in € (must be > 0)
-        loan_duration_months: Loan duration in months (must be > 0, integer)
-        annual_interest_rate: Annual interest rate in % (must be > 0)
+        principal:            Total loan amount (must be >= 0)
+        annual_interest_rate: Annual interest rate in % (must be >= 0)
+        years:                Loan duration in years (must be > 0)
 
     Returns:
-        dict with monthly_payment, total_payment, total_interest
+        Monthly payment rounded to 2 decimal places
     """
-    if loan_amount <= 0:
-        raise ValueError("loan_amount must be greater than 0")
-    if loan_duration_months <= 0:
-        raise ValueError("loan_duration_months must be greater than 0")
-    if annual_interest_rate <= 0:
-        raise ValueError("annual_interest_rate must be greater than 0")
+    if principal < 0 or annual_interest_rate < 0 or years <= 0:
+        raise ValueError("Invalid input: principal and annual_interest_rate must be non-negative, and years must be greater than zero.")
 
-    monthly_rate = annual_interest_rate / 12 / 100
+    n = years * 12
 
-    numerator = monthly_rate * (1 + monthly_rate) ** loan_duration_months
-    denominator = (1 + monthly_rate) ** loan_duration_months - 1
-    monthly_payment = loan_amount * (numerator / denominator)
+    if annual_interest_rate == 0:
+        return round(principal / n, 2)
 
-    total_payment = monthly_payment * loan_duration_months
-    total_interest = total_payment - loan_amount
+    i = (annual_interest_rate / 100) / 12
 
-    return {
-        "monthly_payment": round(monthly_payment, 2),
-        "total_payment": round(total_payment, 2),
-        "total_interest": round(total_interest, 2),
-    }
+    numerator = i * (1 + i) ** n
+    denominator = (1 + i) ** n - 1
+    monthly_payment = principal * (numerator / denominator)
+
+    return round(monthly_payment, 2)
 
 
 # ── CLI ──────────────────────────────────────────────────────────────────────
@@ -64,14 +58,17 @@ def main():
         if choice == "1":
             try:
                 amount = float(input("  Loan amount (€): "))
-                months = int(input("  Duration (months): "))
+                years = float(input("  Duration (years): "))
                 rate = float(input("  Annual interest rate (%): "))
 
-                result = calculate_monthly_payment(amount, months, rate)
+                monthly_payment = calculate_monthly_payment(amount, rate, years)
 
-                print(f"\n  Monthly payment: € {result['monthly_payment']:,.2f}")
-                print(f"  Total payment:   € {result['total_payment']:,.2f}")
-                print(f"  Total interest:  € {result['total_interest']:,.2f}\n")
+                total_payment = monthly_payment * (years * 12)
+                total_interest = total_payment - amount
+
+                print(f"\n  Monthly payment: € {monthly_payment:,.2f}")
+                print(f"  Total payment:   € {total_payment:,.2f}")
+                print(f"  Total interest:  € {total_interest:,.2f}\n")
 
             except (ValueError, TypeError) as e:
                 print(f"\n  ⚠ Error: {e}\n")
